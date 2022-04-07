@@ -16,9 +16,7 @@ export default function Index() {
                 Tap and Pay - Application wallet that made payments easier and efficient 
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
-                About Tap and Pay About Tap and Pay About Tap and Pay About Tap and Pay 
-                About Tap and Pay About Tap and Pay About Tap and Pay About Tap and Pay 
-                About Tap and Pay About Tap and Pay About Tap and Pay About Tap and Pay 
+              A website or app that can serve as mobile wallet for students at university campus
               </p>
               <div className="mt-12">
                 <a

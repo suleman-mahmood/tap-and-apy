@@ -41,10 +41,28 @@ export default function Dashboard() {
   return (
     <>
       <div className="p-8 flex flex-col items-center justify-center">
-        <h1>Dashboard</h1>
+        <h1>Profile Data</h1>
         <h2>Name: {userData.fullName}</h2>
         <h2>Balance: {userData.balance}</h2>
         <h2>Email: {userData.email}</h2>
+      </div>
+      <div className="p-8 flex flex-col items-center justify-center">
+        <h1>Advertisement Banners</h1>
+        <img
+          src="/img/banner.jpg"
+          className="w-full h-24 bg-white border my-6"
+          alt="..."
+        ></img>
+        <img
+          src="/img/banner.jpg"
+          className="w-full h-24 bg-white border my-6"
+          alt="..."
+        ></img>
+        <img
+          src="/img/banner.jpg"
+          className="w-full h-24 bg-white border my-6"
+          alt="..."
+        ></img>
       </div>
     </>
   );
