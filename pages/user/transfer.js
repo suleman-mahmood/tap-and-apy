@@ -132,6 +132,9 @@ export default function Dashboard() {
               }
             }}
             className="w-full"
+            constraints={{
+              facingMode: 'environment'
+            }}
           />
         </div>
       }
