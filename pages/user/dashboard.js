@@ -1,71 +1,55 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { doc, getDoc } from "firebase/firestore";
-import {db} from "firebase-config";
+import { db } from "firebase-config";
 
 // layout for page
 import User from "layouts/User.js";
 
-export default function Dashboard() {
+export default function Dashboard(props) {
+	const router = useRouter();
+	const [userData, setUserData] = useState();
 
-  const router = useRouter()
-  const [userData, setUserData] = useState({});
+	useEffect(() => {
+		const auth = getAuth();
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				const uid = user.uid;
 
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
+				const docRef = doc(db, "users", uid);
+				getDoc(docRef).then((docSnap) => {
+					if (docSnap.exists()) {
+						// console.log("Document data:", docSnap.data());
+						setUserData(docSnap.data());
+					} else {
+						// doc.data() will be undefined in this case
+						console.log("No such document!");
+					}
+				});
+			} else {
+				// User is signed out
+				router.push("/");
+			}
+		});
+	}, []);
 
-        const docRef = doc(db, "users", uid);
-        getDoc(docRef)
-        .then(docSnap => {
-          if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            setUserData(docSnap.data());
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-
-      } else {
-        // User is signed out
-        router.push("/")
-      }
-    });
-  }, [])
-  
-
-  return (
-    <>
-      <div className="p-8 flex flex-col items-center justify-center">
-        <h1>Profile Data</h1>
-        <h2>Name: {userData.fullName}</h2>
-        <h2>Balance: {userData.balance}</h2>
-        <h2>Email: {userData.email}</h2>
-      </div>
-      <div className="p-8 flex flex-col items-center justify-center">
-        <h1>Advertisement Banners</h1>
-        <img
-          src="/img/banner.jpg"
-          className="w-full h-24 bg-white border my-6"
-          alt="..."
-        ></img>
-        <img
-          src="/img/banner.jpg"
-          className="w-full h-24 bg-white border my-6"
-          alt="..."
-        ></img>
-        <img
-          src="/img/banner.jpg"
-          className="w-full h-24 bg-white border my-6"
-          alt="..."
-        ></img>
-      </div>
-    </>
-  );
+	return (
+		<>
+			<div className="p-8 flex flex-col items-center justify-center">
+				<h1>Profile Data</h1>
+				<h2>Name: {userData ? userData.fullName : null}</h2>
+				<h2>Balance: {userData ? userData.balance : null}</h2>
+				<h2>Email: {userData ? userData.email : null}</h2>
+			</div>
+			<div className="p-8 flex flex-col items-center justify-center">
+				<h1>Advertisement Banners</h1>
+				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
+				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
+				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
+			</div>
+		</>
+	);
 }
 
 Dashboard.layout = User;

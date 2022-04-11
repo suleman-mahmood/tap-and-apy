@@ -20,10 +20,8 @@ export default function Login() {
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				// Signed in
-				const user = userCredential.user;
-
 				// Redirect user to dashboard
-				router.push("/user/dashboard");
+				router.push("user/dashboard");
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
