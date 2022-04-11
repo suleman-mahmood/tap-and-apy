@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, collection, query, where, getDocs, updateDoc, runTransaction } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs, runTransaction } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { db } from "firebase-config";
 import { QrReader } from "react-qr-reader";
 import Swal from "sweetalert2";
+import { v4 as uuidv4 } from "uuid";
 
 // layout for page
 import User from "layouts/User.js";
@@ -43,7 +44,7 @@ export default function Dashboard() {
 		});
 	}, []);
 
-	const handleTransfer = () => {
+	const handleTransfer = async () => {
 		if (amount <= 0) {
 			console.log("Don't enter a negative value");
 			return;
@@ -53,44 +54,64 @@ export default function Dashboard() {
 		const emailQuery = rollNumber + "@lums.edu.pk";
 		const q = query(docRef, where("email", "==", emailQuery));
 
-		getDocs(q).then((querySnapshot) => {
-			querySnapshot.forEach((incomingDoc) => {
-				const docId = incomingDoc.id;
-				// const docData = incomingDoc.data();
+		getDocs(q).then(async (querySnapshot) => {
+			// Check if the roll number exists in the database
+			if (querySnapshot.empty) {
+				console.log("Couldn't find roll number");
+			}
 
-				runTransaction(db, (transaction) => {
+			querySnapshot.forEach(async (recipientDoc, index) => {
+				// To prevent loop working for multiple documents
+				if (index > 1) return;
+
+				const docId = recipientDoc.id;
+
+				const transactionData = await runTransaction(db, (transaction) => {
 					const senderDocRef = doc(db, "users", myUid);
 					const recipientDocRef = doc(db, "users", docId);
 
 					return transaction.get(senderDocRef).then((senderDoc) => {
-						return transaction.get(recipientDocRef).then((recipientDoc) => {
-							// Update my doc (sender)
-							transaction.update(senderDocRef, {
-								balance: senderDoc.data().balance - parseInt(amount),
-							});
-							// Update recipient's doc
-							transaction.update(recipientDocRef, {
-								balance: recipientDoc.data().balance + parseInt(amount),
-							});
-							console.log("All done successfully!");
-
-							setUserData({
-								...userData,
-								balance: userData.balance - amount,
-							});
-							setAmount(0);
-							setRollNumber(0);
-
-							Swal.fire({
-								title: "Payment Successful",
-								text: "You have successfully transferred Rs." + amount + " to " + rollNumber,
-								icon: "success",
-								confirmButtonText: "Cool",
-							});
-
-							return transaction;
+						// Update my doc (sender)
+						transaction.update(senderDocRef, {
+							balance: senderDoc.data().balance - parseInt(amount),
 						});
+						// Update recipient's doc
+						transaction.update(recipientDocRef, {
+							balance: recipientDoc.data().balance + parseInt(amount),
+						});
+						// Enter a new log in transaction
+						const newUid = uuidv4();
+						const transactionDocRef = doc(db, "transactions", newUid);
+						const transactionData = {
+							sender: myUid,
+							recipient: docId,
+							senderName: senderDoc.data().fullName,
+							recipientName: recipientDoc.data().fullName,
+							senderEmail: senderDoc.data().email,
+							recipientEmail: recipientDoc.data().email,
+							amount: amount,
+							timestamp: Date.now(),
+						};
+						transaction.set(transactionDocRef, transactionData);
+
+						return transaction;
 					});
+				});
+
+				console.log("All done successfully!");
+
+				setUserData({
+					...userData,
+					balance: userData.balance - amount,
+				});
+				setAmount(0);
+				setRollNumber(0);
+
+				Swal.fire({
+					title: "Payment Successful",
+					text: "You have successfully transferred Rs." + amount + " to " + rollNumber,
+					icon: "success",
+					confirmButtonText: "Cool",
 				});
 			});
 		});
