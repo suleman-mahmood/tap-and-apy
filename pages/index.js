@@ -15,11 +15,13 @@ export default function Index() {
 		const auth = getAuth();
 		const user = auth.currentUser;
 
-		onAuthStateChanged(auth, (user) => {
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user && !window.location.href.includes("user")) {
 				router.push("user/dashboard");
 			}
 		});
+
+		return () => unsubscribe();
 	}, []);
 
 	return (
