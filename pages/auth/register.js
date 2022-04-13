@@ -24,10 +24,10 @@ export default function Register() {
 	};
 
 	const register = () => {
-		if (!authenticateEmail()) {
-			console.log("Enter a LUMS email");
-			return;
-		}
+		// if (!authenticateEmail()) {
+		// 	console.log("Enter a LUMS email");
+		// 	return;
+		// }
 
 		const auth = getAuth();
 

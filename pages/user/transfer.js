@@ -117,6 +117,79 @@ export default function Dashboard() {
 		});
 	};
 
+	const handleJamminTransfer = async () => {
+		if (amount <= 0) {
+			console.log("Don't enter a negative value");
+			return;
+		}
+
+		const docRef = collection(db, "users");
+		const emailQuery = "admin@jjkitchen.com";
+		const q = query(docRef, where("email", "==", emailQuery));
+
+		getDocs(q).then(async (querySnapshot) => {
+			// Check if the roll number exists in the database
+			if (querySnapshot.empty) {
+				console.log("Couldn't find roll number");
+			}
+
+			querySnapshot.forEach(async (recipientDoc, index) => {
+				// To prevent loop working for multiple documents
+				if (index > 1) return;
+
+				const docId = recipientDoc.id;
+
+				const transactionData = await runTransaction(db, (transaction) => {
+					const senderDocRef = doc(db, "users", myUid);
+					const recipientDocRef = doc(db, "users", docId);
+
+					return transaction.get(senderDocRef).then((senderDoc) => {
+						// Update my doc (sender)
+						transaction.update(senderDocRef, {
+							balance: senderDoc.data().balance - parseInt(amount),
+						});
+						// Update recipient's doc
+						transaction.update(recipientDocRef, {
+							balance: recipientDoc.data().balance + parseInt(amount),
+						});
+						// Enter a new log in transaction
+						const newUid = uuidv4();
+						const transactionDocRef = doc(db, "transactions", newUid);
+						const transactionData = {
+							sender: myUid,
+							recipient: docId,
+							senderName: senderDoc.data().fullName,
+							recipientName: recipientDoc.data().fullName,
+							senderEmail: senderDoc.data().email,
+							recipientEmail: recipientDoc.data().email,
+							amount: amount,
+							timestamp: Date.now(),
+						};
+						transaction.set(transactionDocRef, transactionData);
+
+						return transaction;
+					});
+				});
+
+				console.log("All done successfully!");
+
+				setUserData({
+					...userData,
+					balance: userData.balance - amount,
+				});
+				setAmount(0);
+				setRollNumber(0);
+
+				Swal.fire({
+					title: "Payment Successful",
+					text: "You have successfully transferred Rs." + amount + " to " + rollNumber,
+					icon: "success",
+					confirmButtonText: "Cool",
+				});
+			});
+		});
+	};
+
 	return (
 		<>
 			<div className="p-8 flex items-center flex-col justify-center">
@@ -136,6 +209,14 @@ export default function Dashboard() {
 				</div>
 				<h1 className="text-center">Now Either scan a QR code to add recipients address or add it manually</h1>
 			</div>
+
+			<button
+				className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+				type="button"
+				onClick={handleJamminTransfer}
+			>
+				Pay at Jammin
+			</button>
 
 			{qrResult != -1 ? (
 				<></>

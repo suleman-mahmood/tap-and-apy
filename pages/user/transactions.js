@@ -26,13 +26,12 @@ export default function Landing() {
 				// TODO: add q2 implementation
 				const q2 = query(docRef, where("recipient", "==", uid));
 
-				onSnapshot(q1, (querySnapshot) => {
+				onSnapshot(q2, (querySnapshot) => {
 					if (querySnapshot.empty) {
 						console.log("No transactions found!");
 					}
 
 					const oldList = [];
-					const idList = [];
 
 					querySnapshot.forEach((eachQueryDoc) => {
 						let data = eachQueryDoc.data();
@@ -44,15 +43,15 @@ export default function Landing() {
 						data = {
 							...data,
 							timestamp: date,
+							unixTimestamp: someDate,
+							docId: eachQueryDoc.id.substr(0, 8),
 						};
 						oldList.push(data);
-
-						// oldList.push(eachQueryDoc.data());
-						idList.push(eachQueryDoc.id);
 					});
 
+					oldList.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
 					setTransactionsList(oldList);
-					setTransactionId(idList);
 				});
 			} else {
 				// User is signed out
@@ -102,7 +101,7 @@ export default function Landing() {
 													<i className="fas fa-arrow-up"></i>
 												</div>
 												<h6 className="text-xl font-semibold">
-													Transaction ID: <b>{transactionId.length != 0 ? transactionId[i].substr(0, 8) : null}</b>
+													Transaction ID: <b>{trans.docId}</b>
 												</h6>
 												<p className="mt-2 mb-4 text-blueGray-500">
 													Transaction Amount: <b>{trans.amount}</b>
