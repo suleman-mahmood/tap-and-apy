@@ -9,8 +9,10 @@ import User from "layouts/User.js";
 
 export default function Landing() {
 	const [userUid, setUserUid] = useState(-1);
-	const [transactionsList, setTransactionsList] = useState([]);
+	const [transactionsDebitList, setTransactionsDebitList] = useState([]);
+	const [transactionsCreditList, setTransactionsCreditList] = useState([]);
 	const [transactionId, setTransactionId] = useState([]);
+	const [showDebit, setShowDebit] = useState(true);
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -25,6 +27,34 @@ export default function Landing() {
 
 				// TODO: add q2 implementation
 				const q2 = query(docRef, where("recipient", "==", uid));
+
+				onSnapshot(q1, (querySnapshot) => {
+					if (querySnapshot.empty) {
+						console.log("No transactions found!");
+					}
+
+					const oldList = [];
+
+					querySnapshot.forEach((eachQueryDoc) => {
+						let data = eachQueryDoc.data();
+						let someDate = data.timestamp;
+
+						let date = new Date(someDate);
+						date = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + " on " + date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+
+						data = {
+							...data,
+							timestamp: date,
+							unixTimestamp: someDate,
+							docId: eachQueryDoc.id.substr(0, 8),
+						};
+						oldList.push(data);
+					});
+
+					oldList.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+					setTransactionsDebitList(oldList);
+				});
 
 				onSnapshot(q2, (querySnapshot) => {
 					if (querySnapshot.empty) {
@@ -51,7 +81,7 @@ export default function Landing() {
 
 					oldList.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-					setTransactionsList(oldList);
+					setTransactionsCreditList(oldList);
 				});
 			} else {
 				// User is signed out
@@ -89,38 +119,100 @@ export default function Landing() {
 					</div>
 				</div>
 
-				{transactionsList.map((trans, i) => {
-					return (
-						<section key={i} className="pb-20 bg-blueGray-200 -mt-24">
-							<div className="container mx-auto px-4">
-								<div className="flex flex-wrap">
-									<div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-										<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-											<div className="px-4 py-5 flex-auto">
-												<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
-													<i className="fas fa-arrow-up"></i>
+				<div className="flex w-full text-center">
+					<div className="w-1/2">
+						<button
+							className={
+								"w-full active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" +
+								(showDebit ? " text-white bg-blueGray-800" : "bg-white text-black")
+							}
+							type="button"
+							onClick={() => setShowDebit(true)}
+						>
+							Debit
+						</button>
+					</div>
+					<div className="w-1/2">
+						<button
+							className={
+								"w-full active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" +
+								(!showDebit ? " text-white bg-blueGray-800" : "bg-white text-black")
+							}
+							type="button"
+							onClick={() => setShowDebit(false)}
+						>
+							Credit
+						</button>
+					</div>
+				</div>
+
+				<hr className="border-b-2 mb-24 border-blueGray-600" />
+
+				{showDebit
+					? transactionsDebitList.map((trans, i) => {
+							return (
+								<section key={i} className="pb-20 bg-blueGray-200 -mt-24">
+									<div className="container mx-auto px-4">
+										<div className="flex flex-wrap">
+											<div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
+												<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+													<div className="px-4 py-5 flex-auto">
+														<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
+															<i className="fas fa-arrow-up"></i>
+														</div>
+														<h6 className="text-xl font-semibold">
+															Transaction ID: <b>{trans.docId}</b>
+														</h6>
+														<p className="mt-2 mb-4 text-blueGray-500">
+															Transaction Amount: <b>{trans.amount}</b>
+															<br />
+															Recipient Email: <b>{trans.recipientEmail}</b>
+															<br />
+															Recipient Name: <b>{trans.recipientName}</b>
+															<br />
+															Timestamp: <b>{trans.timestamp}</b>
+															<br />
+														</p>
+													</div>
 												</div>
-												<h6 className="text-xl font-semibold">
-													Transaction ID: <b>{trans.docId}</b>
-												</h6>
-												<p className="mt-2 mb-4 text-blueGray-500">
-													Transaction Amount: <b>{trans.amount}</b>
-													<br />
-													Sender Email: <b>{trans.senderEmail}</b>
-													<br />
-													Sender Name: <b>{trans.senderName}</b>
-													<br />
-													Timestamp: <b>{trans.timestamp}</b>
-													<br />
-												</p>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</section>
-					);
-				})}
+								</section>
+							);
+					  })
+					: transactionsCreditList.map((trans, i) => {
+							return (
+								<section key={i} className="pb-20 bg-blueGray-200 -mt-24">
+									<div className="container mx-auto px-4">
+										<div className="flex flex-wrap">
+											<div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
+												<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+													<div className="px-4 py-5 flex-auto">
+														<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
+															<i className="fas fa-arrow-up"></i>
+														</div>
+														<h6 className="text-xl font-semibold">
+															Transaction ID: <b>{trans.docId}</b>
+														</h6>
+														<p className="mt-2 mb-4 text-blueGray-500">
+															Transaction Amount: <b>{trans.amount}</b>
+															<br />
+															Sender Email: <b>{trans.senderEmail}</b>
+															<br />
+															Sender Name: <b>{trans.senderName}</b>
+															<br />
+															Timestamp: <b>{trans.timestamp}</b>
+															<br />
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							);
+					  })}
 			</main>
 		</>
 	);
