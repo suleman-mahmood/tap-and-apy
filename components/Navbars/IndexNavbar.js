@@ -25,7 +25,7 @@ export default function Navbar(props) {
 						</button>
 					</div>
 					<div className={"lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none" + (navbarOpen ? " block" : " hidden")} id="example-navbar-warning">
-						<ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+						<ul className="flex flex-col lg:flex-row list-none lg:ml-auto" onClick={() => setNavbarOpen(false)}>
 							<Link href="/" className="flex items-center mr-4">
 								<a className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold">
 									<span className="ml-2">About Us</span>

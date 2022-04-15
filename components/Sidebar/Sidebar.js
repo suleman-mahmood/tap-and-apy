@@ -70,7 +70,7 @@ export default function Sidebar() {
 							</div>
 						</div>
 
-						<ul className="md:flex-col md:min-w-full flex flex-col list-none">
+						<ul className="md:flex-col md:min-w-full flex flex-col list-none" onClick={() => setCollapseShow("hidden")}>
 							<li className="items-center">
 								<Link href="/user/dashboard">
 									<a
