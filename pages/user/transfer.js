@@ -44,6 +44,12 @@ export default function Dashboard() {
 		});
 	}, []);
 
+	useEffect(() => {
+		if (qrResult == 0 || qrResult == -1) return;
+
+		confirmDialogBox(qrResult, "student");
+	}, [qrResult]);
+
 	// const handleTransfer = async () => {
 	// 	if (amount <= 0) {
 	// 		console.log("Don't enter a negative value");
