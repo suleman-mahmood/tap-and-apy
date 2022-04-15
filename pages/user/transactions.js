@@ -6,8 +6,11 @@ import { db } from "firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import User from "layouts/User.js";
+import { useRouter } from "next/router";
 
 export default function Landing() {
+	const router = useRouter();
+
 	const [userUid, setUserUid] = useState(-1);
 	const [transactionsDebitList, setTransactionsDebitList] = useState([]);
 	const [transactionsCreditList, setTransactionsCreditList] = useState([]);

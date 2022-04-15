@@ -1,13 +1,13 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD2ZZpwEJAApknl8BSPsZ_yfb8Opcn9baw",
-    authDomain: "taps-and-pay.firebaseapp.com",
-    projectId: "taps-and-pay",
-    storageBucket: "taps-and-pay.appspot.com",
-    messagingSenderId: "554637977969",
-    appId: "1:554637977969:web:7d84a650505fb6c805aed0"
+	apiKey: process.env.NEXT_PUBLIC_FIREBASE_apiKey,
+	authDomain: process.env.NEXT_PUBLIC_FIREBASE_authDomain,
+	projectId: process.env.NEXT_PUBLIC_FIREBASE_projectId,
+	storageBucket: process.env.NEXT_PUBLIC_FIREBASE_storageBucket,
+	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_messagingSenderId,
+	appId: process.env.NEXT_PUBLIC_FIREBASE_appId,
 };
 
 export const app = initializeApp(firebaseConfig);
