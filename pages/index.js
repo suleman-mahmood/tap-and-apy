@@ -13,7 +13,6 @@ export default function Index() {
 
 	useEffect(() => {
 		const auth = getAuth();
-		const user = auth.currentUser;
 
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user && !window.location.href.includes("user")) {

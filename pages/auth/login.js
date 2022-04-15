@@ -14,6 +14,10 @@ export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	useEffect(() => {
+		router.prefetch("/user/dashboard");
+	}, []);
+
 	const login = () => {
 		const auth = getAuth();
 
@@ -21,7 +25,7 @@ export default function Login() {
 			.then((userCredential) => {
 				// Signed in
 				// Redirect user to dashboard
-				router.push("user/dashboard");
+				router.push("/user/dashboard");
 			})
 			.catch((error) => {
 				const errorMessage = error.message;

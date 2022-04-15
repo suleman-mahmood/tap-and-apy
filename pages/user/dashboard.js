@@ -12,8 +12,10 @@ export default function Dashboard(props) {
 	const [userData, setUserData] = useState();
 
 	useEffect(() => {
+		router.prefetch("/user/transfer");
 		const auth = getAuth();
-		onAuthStateChanged(auth, (user) => {
+
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				const uid = user.uid;
 
@@ -32,12 +34,16 @@ export default function Dashboard(props) {
 				router.push("/");
 			}
 		});
+
+		return () => unsubscribe();
 	}, []);
 
 	return (
 		<>
 			<div className="p-8 flex flex-col items-center justify-center">
-				<h1>Profile Data</h1>
+				<h1>
+					<b>Profile Data</b>
+				</h1>
 				<h2>Name: {userData ? userData.fullName : null}</h2>
 				<h2>Balance: {userData ? userData.balance : null}</h2>
 				<h2>Email: {userData ? userData.email : null}</h2>
