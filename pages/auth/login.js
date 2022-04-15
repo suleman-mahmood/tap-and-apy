@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Loader from "components/Loaders/circle";
 
 // Firebase Authentication
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -14,22 +15,28 @@ export default function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+	const [showLoader, setShowLoader] = useState(false);
+
 	useEffect(() => {
 		router.prefetch("/user/dashboard");
 	}, []);
 
 	const login = () => {
+		setShowLoader(true);
+
 		const auth = getAuth();
 
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				// Signed in
 				// Redirect user to dashboard
+				setShowLoader(false);
 				router.push("/user/dashboard");
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
 				console.log(errorMessage);
+				setShowLoader(false);
 			});
 	};
 
@@ -88,6 +95,7 @@ export default function Login() {
 									</div>
 								</form>
 							</div>
+							{showLoader ? <Loader /> : null}
 							<hr className="border-b-1 border-blueGray-300" />
 							<div className="rounded-t mb-0 px-6 py-6">
 								<div className="text-center mb-3">

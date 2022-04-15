@@ -7,6 +7,8 @@ import { QrReader } from "react-qr-reader";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
 
+import Loader from "components/Loaders/circle";
+
 // layout for page
 import User from "layouts/User.js";
 
@@ -14,11 +16,11 @@ export default function Dashboard() {
 	const router = useRouter();
 	const [userData, setUserData] = useState({});
 
-	const [rollNumber, setRollNumber] = useState("");
 	const [amount, setAmount] = useState(0);
 	const [myUid, setMyUid] = useState("");
 
 	const [qrResult, setQrResult] = useState(0);
+	const [showLoader, setShowLoader] = useState(false);
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -49,152 +51,6 @@ export default function Dashboard() {
 
 		confirmDialogBox(qrResult, "student");
 	}, [qrResult]);
-
-	// const handleTransfer = async () => {
-	// 	if (amount <= 0) {
-	// 		console.log("Don't enter a negative value");
-	// 		return;
-	// 	}
-
-	// 	const docRef = collection(db, "users");
-	// 	const emailQuery = rollNumber + "@lums.edu.pk";
-	// 	const q = query(docRef, where("email", "==", emailQuery));
-
-	// 	getDocs(q).then(async (querySnapshot) => {
-	// 		// Check if the roll number exists in the database
-	// 		if (querySnapshot.empty) {
-	// 			console.log("Couldn't find roll number");
-	// 		}
-
-	// 		querySnapshot.forEach(async (recipientDoc, index) => {
-	// 			// To prevent loop working for multiple documents
-	// 			if (index > 1) return;
-
-	// 			const docId = recipientDoc.id;
-
-	// 			const transactionData = await runTransaction(db, (transaction) => {
-	// 				const senderDocRef = doc(db, "users", myUid);
-	// 				const recipientDocRef = doc(db, "users", docId);
-
-	// 				return transaction.get(senderDocRef).then((senderDoc) => {
-	// 					// Update my doc (sender)
-	// 					transaction.update(senderDocRef, {
-	// 						balance: senderDoc.data().balance - parseInt(amount),
-	// 					});
-	// 					// Update recipient's doc
-	// 					transaction.update(recipientDocRef, {
-	// 						balance: recipientDoc.data().balance + parseInt(amount),
-	// 					});
-	// 					// Enter a new log in transaction
-	// 					const newUid = uuidv4();
-	// 					const transactionDocRef = doc(db, "transactions", newUid);
-	// 					const transactionData = {
-	// 						sender: myUid,
-	// 						recipient: docId,
-	// 						senderName: senderDoc.data().fullName,
-	// 						recipientName: recipientDoc.data().fullName,
-	// 						senderEmail: senderDoc.data().email,
-	// 						recipientEmail: recipientDoc.data().email,
-	// 						amount: amount,
-	// 						timestamp: Date.now(),
-	// 					};
-	// 					transaction.set(transactionDocRef, transactionData);
-
-	// 					return transaction;
-	// 				});
-	// 			});
-
-	// 			console.log("All done successfully!");
-
-	// 			setUserData({
-	// 				...userData,
-	// 				balance: userData.balance - amount,
-	// 			});
-	// 			setAmount(0);
-	// 			setRollNumber(0);
-
-	// 			Swal.fire({
-	// 				title: "Payment Successful",
-	// 				text: "You have successfully transferred Rs." + amount + " to " + rollNumber,
-	// 				icon: "success",
-	// 				confirmButtonText: "Cool",
-	// 			});
-	// 		});
-	// 	});
-	// };
-
-	// const handleJamminTransfer = async () => {
-	// 	if (amount <= 0) {
-	// 		console.log("Don't enter a negative value");
-	// 		return;
-	// 	}
-
-	// 	const docRef = collection(db, "users");
-	// 	const emailQuery = "admin@jjkitchen.com";
-	// 	const q = query(docRef, where("email", "==", emailQuery));
-
-	// 	getDocs(q).then(async (querySnapshot) => {
-	// 		// Check if the roll number exists in the database
-	// 		if (querySnapshot.empty) {
-	// 			console.log("Couldn't find roll number");
-	// 		}
-
-	// 		querySnapshot.forEach(async (recipientDoc, index) => {
-	// 			// To prevent loop working for multiple documents
-	// 			if (index > 1) return;
-
-	// 			const docId = recipientDoc.id;
-
-	// 			const transactionData = await runTransaction(db, (transaction) => {
-	// 				const senderDocRef = doc(db, "users", myUid);
-	// 				const recipientDocRef = doc(db, "users", docId);
-
-	// 				return transaction.get(senderDocRef).then((senderDoc) => {
-	// 					// Update my doc (sender)
-	// 					transaction.update(senderDocRef, {
-	// 						balance: senderDoc.data().balance - parseInt(amount),
-	// 					});
-	// 					// Update recipient's doc
-	// 					transaction.update(recipientDocRef, {
-	// 						balance: recipientDoc.data().balance + parseInt(amount),
-	// 					});
-	// 					// Enter a new log in transaction
-	// 					const newUid = uuidv4();
-	// 					const transactionDocRef = doc(db, "transactions", newUid);
-	// 					const transactionData = {
-	// 						sender: myUid,
-	// 						recipient: docId,
-	// 						senderName: senderDoc.data().fullName,
-	// 						recipientName: recipientDoc.data().fullName,
-	// 						senderEmail: senderDoc.data().email,
-	// 						recipientEmail: recipientDoc.data().email,
-	// 						amount: amount,
-	// 						timestamp: Date.now(),
-	// 					};
-	// 					transaction.set(transactionDocRef, transactionData);
-
-	// 					return transaction;
-	// 				});
-	// 			});
-
-	// 			console.log("All done successfully!");
-
-	// 			setUserData({
-	// 				...userData,
-	// 				balance: userData.balance - amount,
-	// 			});
-	// 			setAmount(0);
-	// 			setRollNumber(0);
-
-	// 			Swal.fire({
-	// 				title: "Payment Successful",
-	// 				text: "You have successfully transferred Rs." + amount + " to " + rollNumber,
-	// 				icon: "success",
-	// 				confirmButtonText: "Cool",
-	// 			});
-	// 		});
-	// 	});
-	// };
 
 	const handleVendorTransfer = () => {
 		Swal.fire({
@@ -263,6 +119,8 @@ export default function Dashboard() {
 			return;
 		}
 
+		setShowLoader(true);
+
 		const docRef = collection(db, "users");
 		let q = "";
 
@@ -284,7 +142,8 @@ export default function Dashboard() {
 		getDocs(q).then(async (querySnapshot) => {
 			// Check if the roll number exists in the database
 			if (querySnapshot.empty) {
-				console.log("Couldn't find roll number");
+				Swal.fire("Couldn't find roll number");
+				setShowLoader(false);
 			}
 
 			querySnapshot.forEach(async (recipientDoc, index) => {
@@ -297,32 +156,37 @@ export default function Dashboard() {
 					const senderDocRef = doc(db, "users", myUid);
 					const recipientDocRef = doc(db, "users", docId);
 
-					return transaction.get(senderDocRef).then((senderDoc) => {
-						// Update my doc (sender)
-						transaction.update(senderDocRef, {
-							balance: senderDoc.data().balance - parseInt(amount),
+					return transaction
+						.get(senderDocRef)
+						.then((senderDoc) => {
+							// Update my doc (sender)
+							transaction.update(senderDocRef, {
+								balance: senderDoc.data().balance - parseInt(amount),
+							});
+							// Update recipient's doc
+							transaction.update(recipientDocRef, {
+								balance: recipientDoc.data().balance + parseInt(amount),
+							});
+							// Enter a new log in transaction
+							const newUid = uuidv4();
+							const transactionDocRef = doc(db, "transactions", newUid);
+							const transactionData = {
+								sender: myUid,
+								recipient: docId,
+								senderName: senderDoc.data().fullName,
+								recipientName: recipientDoc.data().fullName,
+								senderEmail: senderDoc.data().email,
+								recipientEmail: recipientDoc.data().email,
+								amount: amount,
+								timestamp: Date.now(),
+							};
+							transaction.set(transactionDocRef, transactionData);
+							return transaction;
+						})
+						.catch((error) => {
+							console.log(error.message);
+							setShowLoader(false);
 						});
-						// Update recipient's doc
-						transaction.update(recipientDocRef, {
-							balance: recipientDoc.data().balance + parseInt(amount),
-						});
-						// Enter a new log in transaction
-						const newUid = uuidv4();
-						const transactionDocRef = doc(db, "transactions", newUid);
-						const transactionData = {
-							sender: myUid,
-							recipient: docId,
-							senderName: senderDoc.data().fullName,
-							recipientName: recipientDoc.data().fullName,
-							senderEmail: senderDoc.data().email,
-							recipientEmail: recipientDoc.data().email,
-							amount: amount,
-							timestamp: Date.now(),
-						};
-						transaction.set(transactionDocRef, transactionData);
-
-						return transaction;
-					});
 				});
 
 				console.log("All done successfully!");
@@ -332,7 +196,7 @@ export default function Dashboard() {
 					balance: userData.balance - amount,
 				});
 				setAmount(0);
-				// setRollNumber(0);
+				setShowLoader(false);
 
 				Swal.fire({
 					title: "Payment Successful",
@@ -401,6 +265,8 @@ export default function Dashboard() {
 				</button>
 			</div>
 
+			{showLoader ? <Loader /> : null}
+
 			{qrResult != -1 ? null : (
 				<div className="fixed w-full h-screen top-0 left-0 z-10 bg-blueGray-600">
 					<div className="fixed w-full left-0">
@@ -419,7 +285,6 @@ export default function Dashboard() {
 								onResult={(result, error) => {
 									if (!!result) {
 										setQrResult(result?.text);
-										setRollNumber(result?.text);
 									}
 
 									if (!!error) {
@@ -435,34 +300,6 @@ export default function Dashboard() {
 					</div>
 				</div>
 			)}
-
-			{/* <div className="flex items-center flex-col justify-center">
-				<h1 className="my-6 font-semibold">Or enter details Manually:</h1>
-				<form>
-					<div className="relative w-full mb-3">
-						<label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-							Receivers Roll Number / Vendor's Address
-						</label>
-						<input
-							type="text"
-							className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-							placeholder="RollNumber"
-							value={rollNumber}
-							onChange={(e) => setRollNumber(e.target.value)}
-						/>
-					</div>
-
-					<div className="text-center mt-6">
-						<button
-							className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-							type="button"
-							// onClick={handleTransfer}
-						>
-							Transfer
-						</button>
-					</div>
-				</form>
-			</div> */}
 		</>
 	);
 }

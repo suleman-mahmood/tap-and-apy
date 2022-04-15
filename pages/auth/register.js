@@ -7,6 +7,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
+import Loader from "components/Loaders/circle";
 
 // layout for page
 import Auth from "layouts/Auth.js";
@@ -17,6 +18,9 @@ export default function Register() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [fullName, setFullName] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
+
+	const [showLoader, setShowLoader] = useState(false);
 
 	const authenticateEmail = () => {
 		if (email.includes("@lums.edu.pk")) return true;
@@ -24,8 +28,11 @@ export default function Register() {
 	};
 
 	const register = () => {
+		setShowLoader(true);
+
 		if (!authenticateEmail()) {
-			console.log("Enter a LUMS email");
+			setErrorMessage("Please enter a LUMS email");
+			setShowLoader(false);
 			return;
 		}
 
@@ -46,24 +53,29 @@ export default function Register() {
 				};
 				setDoc(userDataRef, docData)
 					.then(() => {
+						setShowLoader(false);
 						console.log("Added data entry successfully");
 
 						// Redirect user to dashboard
 						router.push("/user/dashboard");
 					})
 					.catch((error) => {
+						setShowLoader(false);
 						const errorMessage = error.message;
 						console.log("Error when setting up the document", errorMessage);
+						setErrorMessage(errorMessage);
 					});
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
 				console.log("Error when creating user with email and password", errorMessage);
+				setErrorMessage(errorMessage);
+				setShowLoader(false);
 			});
 	};
 
 	const showTermsAndConditions = () => {
-		Swal.fire("Any fool can use a computer");
+		Swal.fire("You accept these terms!");
 	};
 
 	return (
@@ -127,7 +139,9 @@ export default function Register() {
 											</span>
 										</label>
 									</div>
-
+									<p className="text-center text-red-500">
+										<b>{errorMessage}</b>
+									</p>
 									<div className="text-center mt-6">
 										<button
 											className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 w-full ease-linear transition-all duration-150"
@@ -139,6 +153,7 @@ export default function Register() {
 									</div>
 								</form>
 							</div>
+							{showLoader ? <Loader /> : null}
 							<hr className="border-b-1 border-blueGray-300" />
 							<div className="rounded-t mb-0 px-6 py-6">
 								<div className="text-center mb-3">

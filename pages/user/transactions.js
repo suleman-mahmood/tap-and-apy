@@ -8,6 +8,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import User from "layouts/User.js";
 import { useRouter } from "next/router";
 
+import Loader from "components/Loaders/circle";
+
 export default function Landing() {
 	const router = useRouter();
 
@@ -17,7 +19,10 @@ export default function Landing() {
 	const [transactionId, setTransactionId] = useState([]);
 	const [showDebit, setShowDebit] = useState(true);
 
+	const [showLoader, setShowLoader] = useState(false);
+
 	useEffect(() => {
+		setShowLoader(true);
 		const auth = getAuth();
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
@@ -34,6 +39,7 @@ export default function Landing() {
 				onSnapshot(q1, (querySnapshot) => {
 					if (querySnapshot.empty) {
 						console.log("No transactions found!");
+						setShowLoader(false);
 					}
 
 					const oldList = [];
@@ -57,11 +63,13 @@ export default function Landing() {
 					oldList.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
 					setTransactionsDebitList(oldList);
+					setShowLoader(false);
 				});
 
 				onSnapshot(q2, (querySnapshot) => {
 					if (querySnapshot.empty) {
 						console.log("No transactions found!");
+						setShowLoader(false);
 					}
 
 					const oldList = [];
@@ -85,9 +93,11 @@ export default function Landing() {
 					oldList.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
 					setTransactionsCreditList(oldList);
+					setShowLoader(false);
 				});
 			} else {
 				// User is signed out
+				setShowLoader(false);
 				router.push("/");
 			}
 		});
@@ -121,7 +131,7 @@ export default function Landing() {
 						</svg>
 					</div>
 				</div>
-
+				{showLoader ? <Loader /> : null}
 				<div className="flex w-full text-center">
 					<div className="w-1/2">
 						<button
