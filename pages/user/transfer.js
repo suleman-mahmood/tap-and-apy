@@ -232,6 +232,7 @@ export default function Dashboard() {
 		else if (recipient === "bunkers") recipientName = "Bunkers";
 		else if (recipient === "pdc") recipientName = "PDC";
 		else if (recipient === "baradari") recipientName = "Baradari";
+		else recipientName = `${recipient}@lums.edu.pk`;
 
 		Swal.fire({
 			title: "Confirm the following transaction?",
@@ -270,7 +271,7 @@ export default function Dashboard() {
 
 			q = query(docRef, where("email", "==", emailQuery));
 		} else {
-			emailQuery = rollNumber + "@lums.edu.pk";
+			emailQuery = recipient + "@lums.edu.pk";
 			q = query(docRef, where("email", "==", emailQuery));
 		}
 
@@ -337,6 +338,19 @@ export default function Dashboard() {
 		});
 	};
 
+	const handleManualEntry = () => {
+		Swal.fire({
+			title: "Manual Entry",
+			text: "Enter the roll number of the student to whom you want to transfer the money",
+			input: "number",
+			inputLabel: "Recipient's roll number",
+			inputPlaceholder: "Enter recipient's roll number",
+		}).then((response) => {
+			// Handle transfer
+			confirmDialogBox(response.value, "student");
+		});
+	};
+
 	return (
 		<>
 			<div className="p-8 flex items-center flex-col justify-center">
@@ -375,6 +389,7 @@ export default function Dashboard() {
 				<button
 					className="w-1/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
 					type="button"
+					onClick={() => handleManualEntry()}
 				>
 					Enter Transfer details manually (only for student transfers)
 				</button>
@@ -385,6 +400,14 @@ export default function Dashboard() {
 					<div className="fixed w-full left-0">
 						<div className="flex items-center flex-col justify-center">
 							<h1 className="font-semibold">Scan QR code:</h1>
+
+							<button
+								className="w-2/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+								type="button"
+								onClick={() => setQrResult(0)}
+							>
+								Stop scanning
+							</button>
 
 							<QrReader
 								onResult={(result, error) => {
