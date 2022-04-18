@@ -30,11 +30,11 @@ export default function Register() {
 	const register = () => {
 		setShowLoader(true);
 
-		// if (!authenticateEmail()) {
-		// 	setErrorMessage("Please enter a LUMS email");
-		// 	setShowLoader(false);
-		// 	return;
-		// }
+		if (!authenticateEmail()) {
+			setErrorMessage("Please enter a LUMS email");
+			setShowLoader(false);
+			return;
+		}
 
 		const auth = getAuth();
 
