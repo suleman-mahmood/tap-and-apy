@@ -7,6 +7,7 @@ import Loader from "components/Loaders/circle";
 
 // layout for page
 import User from "layouts/User.js";
+import Link from "next/link";
 
 export default function Dashboard(props) {
 	const router = useRouter();
@@ -62,12 +63,22 @@ export default function Dashboard(props) {
 				<h2>Email: {userData ? userData.email : null}</h2>
 			</div>
 			{showLoader ? <Loader /> : null}
-			<div className="p-8 flex flex-col items-center justify-center">
+			<div className="w-full flex items-center justify-center">
+				<Link href="/user/transfer">
+					<button
+						className="w-2/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+						type="button"
+					>
+						Transfer Now!
+					</button>
+				</Link>
+			</div>
+			{/* <div className="p-8 flex flex-col items-center justify-center">
 				<h1>Advertisement Banners</h1>
 				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
 				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
 				<img src="/img/banner.jpg" className="w-full h-24 bg-white border my-6" alt="..."></img>
-			</div>
+			</div> */}
 		</>
 	);
 }

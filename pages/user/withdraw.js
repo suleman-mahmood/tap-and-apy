@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Loader from "components/Loaders/circle";
 
 import User from "layouts/User.js";
+import { useRouter } from "next/router";
 
 export default function Landing() {
 	const [userUid, setUserUid] = useState(-1);
@@ -16,9 +18,13 @@ export default function Landing() {
 	const [iban, setIban] = useState();
 	const [comments, setComments] = useState();
 
+	const [showLoader, setShowLoader] = useState(false);
+	const router = useRouter();
+
 	useEffect(() => {
 		const auth = getAuth();
-		onAuthStateChanged(auth, (user) => {
+
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				// User is signed in
 				const uid = user.uid;
@@ -28,9 +34,13 @@ export default function Landing() {
 				router.push("/");
 			}
 		});
+
+		return () => unsubscribe();
 	}, []);
 
 	const onSubmitWithdrawForm = () => {
+		setShowLoader(true);
+
 		// Add deposit data to firestore
 		const docData = {
 			uid: userUid,
@@ -45,10 +55,12 @@ export default function Landing() {
 		addDoc(collection(db, "withdraw-requests"), docData)
 			.then(() => {
 				console.log("Added data entry successfully");
+				setShowLoader(false);
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
 				console.log("Error when setting up the document", errorMessage);
+				setShowLoader(false);
 			});
 	};
 
@@ -101,6 +113,8 @@ export default function Landing() {
 						</div>
 					</div>
 				</section>
+
+				{showLoader ? <Loader /> : null}
 
 				{/* Deposit Form */}
 				<section className="relative block py-24 lg:pt-0 bg-blueGray-800">

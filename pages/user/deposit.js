@@ -3,14 +3,19 @@ import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Loader from "components/Loaders/circle";
 
 import User from "layouts/User.js";
+import { useRouter } from "next/router";
 
 export default function Landing() {
 	const [userUid, setUserUid] = useState(-1);
 	const [depositAmount, setDepositAmount] = useState(0);
 	const [accountTitle, setAccountTitle] = useState();
 	const [comments, setComments] = useState();
+
+	const [showLoader, setShowLoader] = useState(false);
+	const router = useRouter();
 
 	useEffect(() => {
 		const auth = getAuth();
@@ -27,6 +32,8 @@ export default function Landing() {
 	}, []);
 
 	const onSubmitDepositForm = () => {
+		setShowLoader(true);
+
 		// Add deposit data to firestore
 		const docData = {
 			uid: userUid,
@@ -38,10 +45,12 @@ export default function Landing() {
 		addDoc(collection(db, "deposit-requests"), docData)
 			.then(() => {
 				console.log("Added data entry successfully");
+				setShowLoader(false);
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
 				console.log("Error when setting up the document", errorMessage);
+				setShowLoader(false);
 			});
 	};
 
@@ -123,6 +132,8 @@ export default function Landing() {
 						</div>
 					</div>
 				</section>
+
+				{showLoader ? <Loader /> : null}
 
 				{/* Deposit Form */}
 				<section className="relative block py-24 lg:pt-0 bg-blueGray-800">

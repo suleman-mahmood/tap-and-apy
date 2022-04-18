@@ -115,7 +115,11 @@ export default function Dashboard() {
 
 	const handleTransferConfirm = async (recipient, type) => {
 		if (amount <= 0) {
-			console.log("Don't enter a zero or negative value");
+			Swal.fire({
+				icon: "error",
+				title: "Oops...",
+				text: "Don't enter a zero or negative value!",
+			});
 			return;
 		}
 
@@ -151,6 +155,7 @@ export default function Dashboard() {
 				if (index > 1) return;
 
 				const docId = recipientDoc.id;
+				let isErr = false;
 
 				const transactionData = await runTransaction(db, (transaction) => {
 					const senderDocRef = doc(db, "users", myUid);
@@ -159,6 +164,17 @@ export default function Dashboard() {
 					return transaction
 						.get(senderDocRef)
 						.then((senderDoc) => {
+							// Checks for balance
+							if (senderDoc.data().balance < parseInt(amount)) {
+								Swal.fire({
+									icon: "error",
+									title: "Oops...",
+									text: "You have insufficient balance! Top up your balance in the deposit page now!",
+								});
+								isErr = true;
+								return transaction;
+							}
+
 							// Update my doc (sender)
 							transaction.update(senderDocRef, {
 								balance: senderDoc.data().balance - parseInt(amount),
@@ -193,17 +209,19 @@ export default function Dashboard() {
 
 				setUserData({
 					...userData,
-					balance: userData.balance - amount,
+					balance: isErr ? userData.balance : userData.balance - amount,
 				});
 				setAmount(0);
 				setShowLoader(false);
 
-				Swal.fire({
-					title: "Payment Successful",
-					text: "You have successfully transferred Rs." + amount + " to " + emailQuery,
-					icon: "success",
-					confirmButtonText: "Cool!",
-				});
+				if (!isErr) {
+					Swal.fire({
+						title: "Payment Successful",
+						text: "You have successfully transferred Rs." + amount + " to " + emailQuery,
+						icon: "success",
+						confirmButtonText: "Cool!",
+					});
+				}
 			});
 		});
 	};
