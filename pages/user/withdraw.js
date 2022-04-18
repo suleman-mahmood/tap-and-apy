@@ -21,6 +21,8 @@ export default function Landing() {
 	const [showLoader, setShowLoader] = useState(false);
 	const router = useRouter();
 
+	// Some comment
+
 	useEffect(() => {
 		const auth = getAuth();
 
