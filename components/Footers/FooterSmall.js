@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function FooterSmall(props) {
 	return (
 		<>
-			<footer className={(props.absolute ? "absolute w-full bottom-0 bg-blueGray-800" : "relative") + " pb-6"}>
+			<footer className={(props.absolute ? "absolute w-full bottom-0 color-1" : "relative") + " pb-6"}>
 				<div className="container mx-auto px-4">
 					<hr className="mb-6 border-b-1 border-blueGray-600" />
 					<div className="flex flex-wrap items-center md:justify-between justify-center">
@@ -12,7 +12,7 @@ export default function FooterSmall(props) {
 							<div className="text-sm text-blueGray-500 font-semibold py-1 text-center md:text-left">
 								Copyright © {new Date().getFullYear()}{" "}
 								<Link href="/">
-									<a className="text-white hover:text-blueGray-300 text-sm font-semibold py-1">Tap and Pay</a>
+									<a className="text-color-3 hover:text-blueGray-300 text-sm font-semibold py-1">Tap and Pay</a>
 								</Link>
 							</div>
 						</div>
@@ -20,12 +20,7 @@ export default function FooterSmall(props) {
 							<ul className="flex flex-wrap list-none md:justify-end  justify-center">
 								<li>
 									<Link href="/">
-										<a className="text-white hover:text-blueGray-300 text-sm font-semibold block py-1 px-3">Tap and Pay</a>
-									</Link>
-								</li>
-								<li>
-									<Link href="/">
-										<a className="text-white hover:text-blueGray-300 text-sm font-semibold block py-1 px-3">About Us</a>
+										<a className="text-color-5 hover:text-blueGray-300 text-sm font-semibold block py-1 px-3">About Us</a>
 									</Link>
 								</li>
 							</ul>

@@ -71,7 +71,7 @@ export default function Landing() {
 						<div className="items-center flex flex-wrap">
 							<div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
 								<div className="pr-12">
-									<h1 className="text-white font-semibold text-5xl">Steps to Deposit Money</h1>
+									<h1 className="text-color-3 font-semibold text-5xl">Steps to Deposit Money</h1>
 								</div>
 							</div>
 						</div>
@@ -83,17 +83,17 @@ export default function Landing() {
 					</div>
 				</div>
 
-				<section className="pb-20 bg-blueGray-200 -mt-24">
+				<section className="pb-20 color-1 -mt-24">
 					<div className="container mx-auto px-4">
 						<div className="flex flex-wrap">
 							<div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-								<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+								<div className="relative flex flex-col min-w-0 break-words color-1 w-full mb-8 shadow-lg rounded-lg">
 									<div className="px-4 py-5 flex-auto">
 										<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
 											<i className="fas fa-award"></i>
 										</div>
-										<h6 className="text-xl font-semibold">First, bank transfer the deposit amount to the following details</h6>
-										<p className="mt-2 mb-4 text-blueGray-500">
+										<h6 className="text-xl text-color-2 font-semibold">First, bank transfer the deposit amount to the following details</h6>
+										<p className="mt-2 mb-4 text-color-3">
 											Account Title: <b>Suleman Mahmood</b>
 											<br />
 											Account Number: <b>01300105628521</b>
@@ -107,25 +107,25 @@ export default function Landing() {
 							</div>
 
 							<div className="w-full md:w-4/12 px-4 text-center">
-								<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+								<div className="relative flex flex-col min-w-0 break-words color-1 w-full mb-8 shadow-lg rounded-lg">
 									<div className="px-4 py-5 flex-auto">
 										<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
 											<i className="fas fa-retweet"></i>
 										</div>
-										<h6 className="text-xl font-semibold">Complete the form below</h6>
-										<p className="mt-2 mb-4 text-blueGray-500">Lastly, complete the form below to process your request and get the deposit amount within 24 hours into your digital tap and pay wallet!</p>
+										<h6 className="text-xl text-color-2 font-semibold">Complete the form below</h6>
+										<p className="mt-2 mb-4 text-color-3">Lastly, complete the form below to process your request and get the deposit amount within 24 hours into your digital tap and pay wallet!</p>
 									</div>
 								</div>
 							</div>
 
 							<div className="pt-6 w-full md:w-4/12 px-4 text-center">
-								<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+								<div className="relative flex flex-col min-w-0 break-words color-1 w-full mb-8 shadow-lg rounded-lg">
 									<div className="px-4 py-5 flex-auto">
 										<div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
 											<i className="fas fa-fingerprint"></i>
 										</div>
-										<h6 className="text-xl font-semibold">Note</h6>
-										<p className="mt-2 mb-4 text-blueGray-500">The Bank transfer deposit amount and the form amount must match exactly in order to process the request smoothly and effectively</p>
+										<h6 className="text-xl text-color-2 font-semibold">Note</h6>
+										<p className="mt-2 mb-4 text-color-3">The Bank transfer deposit amount and the form amount must match exactly in order to process the request smoothly and effectively</p>
 									</div>
 								</div>
 							</div>

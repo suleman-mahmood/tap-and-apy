@@ -16,7 +16,7 @@ export default function Dashboard() {
 	const router = useRouter();
 	const [userData, setUserData] = useState({});
 
-	const [amount, setAmount] = useState(0);
+	const [amount, setAmount] = useState();
 	const [myUid, setMyUid] = useState("");
 
 	const [qrResult, setQrResult] = useState(0);
@@ -53,6 +53,11 @@ export default function Dashboard() {
 	}, [qrResult]);
 
 	const handleVendorTransfer = () => {
+		if (amount == 0 || !amount) {
+			Swal.fire("Please enter the amount first!");
+			return;
+		}
+
 		Swal.fire({
 			title: "Select the vendor",
 			input: "select",
@@ -241,16 +246,16 @@ export default function Dashboard() {
 
 	return (
 		<>
-			<div className="p-8 flex items-center flex-col justify-center">
+			<div className="p-8 flex text-color-4 items-center flex-col justify-center">
 				<h1 className="text-2xl font-bold">Transfer Money</h1>
 				<div className="relative w-full mb-3">
 					<p className="my-6">Available Balance: {userData.balance}</p>
-					<label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
+					<label className="block uppercase text-color-4 text-xs font-bold mb-2" htmlFor="grid-password">
 						Amount
 					</label>
 					<input
 						type="number"
-						className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+						className="border-0 px-3 py-3 placeholder-blueGray-300 text-color-2 color-5 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
 						placeholder="Number"
 						onChange={(e) => setAmount(e.target.value)}
 						value={amount}
@@ -261,21 +266,23 @@ export default function Dashboard() {
 
 			<div className="w-full flex flex-wrap justify-center">
 				<button
-					className="w-1/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+					className="w-full my-2 color-2 text-color-1 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
 					type="button"
 					onClick={handleVendorTransfer}
 				>
-					Pay at Vendor
+					Pay at Restaurant (JJ)
 				</button>
+				<p className="text-color-3">OR</p>
 				<button
-					className="w-1/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+					className="w-full my-2 color-2 text-color-1 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
 					type="button"
 					onClick={() => setQrResult(-1)}
 				>
 					Scan QR Code
 				</button>
+				<p className="text-color-3">OR</p>
 				<button
-					className="w-1/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+					className="w-full my-2 color-2 text-color-1 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
 					type="button"
 					onClick={() => handleManualEntry()}
 				>
@@ -286,13 +293,13 @@ export default function Dashboard() {
 			{showLoader ? <Loader /> : null}
 
 			{qrResult != -1 ? null : (
-				<div className="fixed w-full h-screen top-0 left-0 z-10 bg-blueGray-600">
+				<div className="fixed w-full h-screen top-0 left-0 z-10 color-1">
 					<div className="fixed w-full left-0">
 						<div className="flex items-center flex-col justify-center">
-							<h1 className="font-semibold">Scan QR code:</h1>
+							<h1 className="font-semibold text-color-3 my-4">Scan QR code:</h1>
 
 							<button
-								className="w-2/3 bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+								className="w-2/3 color-2 text-color-1 active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
 								type="button"
 								onClick={() => setQrResult(0)}
 							>

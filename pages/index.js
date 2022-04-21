@@ -26,16 +26,21 @@ export default function Index() {
 	return (
 		<>
 			<IndexNavbar fixed />
-			<section className="header relative pt-16 items-center flex h-screen max-h-860-px">
+			<section
+				className="header relative pt-16 items-center flex h-screen max-h-860-px color-1 bg-no-repeat bg-full"
+				style={{
+					backgroundImage: "url('/img/register_bg_2.png')",
+				}}
+			>
 				<div className="container mx-auto items-center flex flex-wrap">
 					<div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
 						<div className="pt-32 sm:pt-0">
-							<h2 className="font-semibold text-4xl text-blueGray-600">Tap and Pay</h2>
-							<h3 className="font-semibold text-xl mt-4 text-blueGray-600">Application wallet that make payments easier and efficient</h3>
-							<p className="mt-4 text-lg leading-relaxed text-blueGray-500">Serve as mobile wallet for students at LUMS</p>
+							<h2 className="font-semibold text-4xl text-blueGray-600 text-color-3">Tap and Pay</h2>
+							<h3 className="font-semibold text-xl mt-4 text-blueGray-600 text-color-5">Application wallet that make payments easier and efficient</h3>
+							<p className="mt-4 text-lg leading-relaxed text-blueGray-500 text-color-5">Serve as mobile wallet for students at LUMS</p>
 							<div className="mt-12">
 								<Link href="/auth/register">
-									<a className="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-blueGray-400 active:bg-blueGray-500 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150">
+									<a className="get-started text-color-1 font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 color-2 active:bg-blueGray-500 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150">
 										Get started
 									</a>
 								</Link>
@@ -43,7 +48,6 @@ export default function Index() {
 						</div>
 					</div>
 				</div>
-				<img className="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px" src="/img/pattern_nextjs.png" alt="..." />
 			</section>
 			<Footer />
 		</>
