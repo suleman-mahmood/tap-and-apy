@@ -104,6 +104,7 @@ export default function Dashboard(props) {
 					</button>
 				</Link>
 			</div>
+			<p className="w-full text-center text-color-3 my-4">Color theme is in progress, sorry for any inconveniences! Any feedback is appreciated :D</p>
 			{showDepositHelp()}
 			{/* <div className="p-8 flex flex-col items-center justify-center">
 				<h1>Advertisement Banners</h1>
