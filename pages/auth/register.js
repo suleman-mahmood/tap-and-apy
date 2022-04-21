@@ -22,9 +22,16 @@ export default function Register() {
 
 	const [showLoader, setShowLoader] = useState(false);
 
+	const EMAIL_LENGTH = 20;
+
 	const authenticateEmail = () => {
 		if (email.includes("@lums.edu.pk")) return true;
 		return false;
+	};
+
+	const checkRollNumberLength = () => {
+		if (email.length !== EMAIL_LENGTH) return false;
+		return true;
 	};
 
 	const register = () => {
@@ -32,6 +39,12 @@ export default function Register() {
 
 		if (!authenticateEmail()) {
 			setErrorMessage("Please enter a LUMS email");
+			setShowLoader(false);
+			return;
+		}
+
+		if (!checkRollNumberLength()) {
+			setErrorMessage("Please enter the correct roll number");
 			setShowLoader(false);
 			return;
 		}

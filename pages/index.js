@@ -30,8 +30,9 @@ export default function Index() {
 				<div className="container mx-auto items-center flex flex-wrap">
 					<div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
 						<div className="pt-32 sm:pt-0">
-							<h2 className="font-semibold text-4xl text-blueGray-600">Tap and Pay - Application wallet that made payments easier and efficient</h2>
-							<p className="mt-4 text-lg leading-relaxed text-blueGray-500">Serve as mobile wallet for students at university campus</p>
+							<h2 className="font-semibold text-4xl text-blueGray-600">Tap and Pay</h2>
+							<h3 className="font-semibold text-xl mt-4 text-blueGray-600">Application wallet that make payments easier and efficient</h3>
+							<p className="mt-4 text-lg leading-relaxed text-blueGray-500">Serve as mobile wallet for students at LUMS</p>
 							<div className="mt-12">
 								<Link href="/auth/register">
 									<a className="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-blueGray-400 active:bg-blueGray-500 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150">

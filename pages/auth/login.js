@@ -14,6 +14,7 @@ export default function Login() {
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const [showLoader, setShowLoader] = useState(false);
 
@@ -24,9 +25,17 @@ export default function Login() {
 	const login = () => {
 		setShowLoader(true);
 
+		let newEmail = email;
+
+		// Append @email.edu.pk if it doesn't exist
+		if (!email.includes("@lums.edu.pk")) {
+			newEmail = newEmail.split("@")[0];
+			newEmail += "@lums.edu.pk";
+			setEmail(newEmail);
+		}
 		const auth = getAuth();
 
-		signInWithEmailAndPassword(auth, email, password)
+		signInWithEmailAndPassword(auth, newEmail, password)
 			.then((userCredential) => {
 				// Signed in
 				// Redirect user to dashboard
@@ -35,7 +44,7 @@ export default function Login() {
 			})
 			.catch((error) => {
 				const errorMessage = error.message;
-				console.log(errorMessage);
+				setErrorMessage(errorMessage);
 				setShowLoader(false);
 			});
 	};
@@ -48,7 +57,9 @@ export default function Login() {
 						<div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
 							<div className="rounded-t mb-0 px-6 py-6">
 								<div className="text-center mb-3">
-									<h6 className="text-blueGray-500 text-sm font-bold">Sign in with LUMS email id</h6>
+									<h6 className="text-blueGray-500 text-sm font-bold">
+										Sign in with LUMS email id or <br /> Roll Number
+									</h6>
 								</div>
 								<hr className="mt-6 border-b-1 border-blueGray-300" />
 							</div>
@@ -56,7 +67,7 @@ export default function Login() {
 								<form>
 									<div className="relative w-full mb-3">
 										<label className="block uppercase text-blueGray-600 text-xs font-bold mb-2" htmlFor="grid-password">
-											Email
+											RollNumber / Email
 										</label>
 										<input
 											type="email"
@@ -83,6 +94,10 @@ export default function Login() {
 											<span className="ml-2 text-sm font-semibold text-blueGray-600">Remember me</span>
 										</label>
 									</div>
+
+									<p className="text-center text-red-500">
+										<b>{errorMessage}</b>
+									</p>
 
 									<div className="text-center mt-6">
 										<button
