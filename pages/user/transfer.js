@@ -240,6 +240,14 @@ export default function Dashboard() {
 			inputPlaceholder: "Enter recipient's roll number",
 		}).then((response) => {
 			// Handle transfer
+			if (response.value + "@lums.edu.pk" === userData.email) {
+				Swal.fire({
+					icon: "error",
+					title: "Oops...",
+					text: "You can't transfer money back to your own account!",
+				});
+				return;
+			}
 			confirmDialogBox(response.value, "student");
 		});
 	};
